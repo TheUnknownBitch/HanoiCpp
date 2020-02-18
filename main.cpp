@@ -54,152 +54,51 @@ private:
 }; //class tower
 
 
-struct Hanoi
+class Hanoi
 {
-	int Height;
+public:
+	Hanoi(): max_height(0), towers(){}
+
+	void Initialise(int const nb_disc)
+	{
+		this->towers.clear();
+		this->towers.resize(3, Tower(nb_disc));
+		for (int disc = nb_disc; disc > 0; --disc)
+		{
+			this->towers[0].Add_disc(disc);
+		}
+		this->max_height = nb_disc;
+	}
+	int Height() const
+	{ return this->max_height; }
+	const Tower& a_tower(int const i) const
+	{
+		return this->towers[i];
+	}
+	bool start_valid(int const start) const {
+		if ( (start < 0) or (start > 2) )
+			return false;
+		return (not this->towers[start].is_empty());
+	}
+	bool arrival_valid(int const start, int const arrival) const
+	{
+		if ( (arrival < 0 ) or (arrival > 2))
+			return false;
+		int start_disc = this->towers[start].Top();
+		return this->towers[arrival].can_add_disc(start_disc);
+	}
+	void move_disc(int const start, int const arrival)
+	{
+		int disc = this->towers[start].Top();
+		this->towers[start].Remove_disc();
+		this->towers[arrival].Add_disc(disc);
+	}
+	bool GameOver() const
+	{
+		return this->towers[2].is_full();
+	}
+private:
+	int max_height;
 	std::vector<Tower> towers;
 
-	Hanoi(int const MaxHeight) : Height(MaxHeight), towers(3, Tower(MaxHeight))
-	{
-		for (int i = 0; i < MaxHeight; ++i)
-		{
-			this->towers[0].discs[i] = MaxHeight - i;
-		}
-		this->towers[0].nb_disc = MaxHeight;
-	}
-};
-
-
-string RowDraw(int const length, int const width)
-{
-	string space(width - length, ' ');
-	string chain;
-	if ( length > 0 )
-	{
-		string disc(length, '=');
-		chain = space + "<" + disc + "!" + disc + ">" + space;
-	}
-	else
-	{
-		chain = space + " ! " + space;
-	}
-	return chain;
-}
-
-void printGame (Hanoi const& input)
-{
-	for (int i = input.Height - 1; i >= 0 ; --i)
-	{
-		for (int x = 0; x < 3 ; ++x)
-		{
-			cout << " " << RowDraw(input.towers[x].discs[i], input.Height) << " ";
-		}
-		cout << endl;
-	}
-}
-
-bool Done(Hanoi const& input)
-{
-	return input.towers[2].nb_disc == input.Height;
-}
-
-bool startTowerValid(Hanoi const& input, int const startTower)
-{
-	if ( (startTower < 0) or (startTower > 2) )
-	{
-		return false;
-	}
-	return input.towers[startTower].nb_disc > 0;
-}
-
-int askStartTower(Hanoi const& input)
-{
-	int startTower;
-	cout << "Start tower : ";
-	cin >> startTower;
-
-	return startTower - 1;
-}
-
-int askEndTower(Hanoi const& input)
-{
-	int arrivalTower;
-	cout << "arrival tower : ";
-	cin >> arrivalTower;
-
-	return arrivalTower - 1;
-}
-
-bool arrivalTowerValid(Hanoi const& input, int start, int arrival)
-{
-	if ( (arrival < 0) or (arrival > 2) )
-	{
-		return false;
-	}
-	if (input.towers[arrival].nb_disc == 0)
-	{
-		return true;
-	}
-	return input.towers[arrival].discs[input.towers[arrival].nb_disc - 1] > input.towers[start].discs[input.towers[start].nb_disc - 1];
-}
-
-bool isNumberDiscValid(int const& input)
-{
-	if((input > 2) && (input < 11))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-int askNumberOfDisc()
-{
-	int number;
-	cout << "With how many discs do you wanna play? Please choose between 3 and 10." << endl << "Your choice : ";
-	cin >> number;
-	while(0 == 0)
-	{
-		if (isNumberDiscValid(number))
-		{
-			return number;
-		}
-		else
-		{
-			cout << "Please choose a number between 3 and 10" << endl << "Your choice : ";
-			cin >> number;
-		}
-	}
-}
-
-void moveDisc(Hanoi& input, int const start, int const arrival)
-{
-	input.towers[arrival].discs[input.towers[arrival].nb_disc] = input.towers[start].discs[input.towers[start].nb_disc - 1];
-	input.towers[start].discs[input.towers[start].nb_disc - 1] = 0;
-	input.towers[start].nb_disc -= 1;
-	input.towers[arrival].nb_disc +=1;
-}
-
-int main(int argc, char const *argv[])
-{
-	Hanoi Game(askNumberOfDisc());
-	int start;
-	int arrival;
-
-	while(!Done(Game))
-	{
-		printGame(Game);
-		start = askStartTower(Game);
-		arrival = askEndTower(Game);
-		if (startTowerValid(Game, start) && arrivalTowerValid(Game, start, arrival))
-			moveDisc(Game, start, arrival);
-		else
-			cout << "Invalid Choice! Please try something smarter!" << endl;
-	}
-	printGame(Game);
-	cout << "Congrats you made it!" << endl;
-
-	return 0;
-}
+}; //class Hanoi
