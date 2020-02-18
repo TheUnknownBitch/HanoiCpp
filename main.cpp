@@ -4,6 +4,20 @@
 
 using namespace std;
 
+void Hanoi_Solution(int nb_disc, int start, int pivot, int finish, std::vector<pair<int, int> >& soluce)
+{
+	if( nb_disc == 1)
+	{
+		soluce.push_back(make_pair(start, finish));
+	}
+	else
+	{
+		Hanoi_Solution(nb_disc - 1, start, finish, pivot, soluce);
+		Hanoi_Solution(1, start, pivot, finish, soluce);
+		Hanoi_Solution(nb_disc - 1, pivot, start, finish, soluce);
+	}
+}
+
 class Tower
 {
 public:
@@ -97,6 +111,11 @@ public:
 	{
 		return this->towers[2].is_full();
 	}
+
+	void Solution(vector<pair<int, int> >& soluce) const
+	{
+		Hanoi_Solution(this->max_height, 0, 1, 2, soluce);
+	}
 private:
 	int max_height;
 	std::vector<Tower> towers;
@@ -177,6 +196,24 @@ public:
 			chain = space + " ! " + space;
 		}
 		return chain;
+	}
+
+	void Solution()
+	{
+		string line(40, '-');
+		cout << line << endl << "SOLUTION" << endl << line << endl;
+		vector<pair<int, int> > soluce;
+		this->Game().Solution(soluce);
+		this->Game().Initialise(this->Game().Height());
+		this->DisplayGame();
+		cout << line << endl;
+		for (int hint_movement = 0; hint_movement < soluce.size(); ++hint_movement)
+		{
+			this->Game().move_disc(soluce[hint_movement].first, soluce[hint_movement].second);
+			this->nb_movement += 1;
+			this->DisplayGame();
+			cout << line << endl;
+		}
 	}
 protected:
 	Hanoi& game_hanoi;
