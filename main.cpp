@@ -133,7 +133,7 @@ public:
 
 	void DisplayGame() const
 	{
-		for(int layer = this->Game().Height(); layer >= 0; --layer)
+		for(int layer = this->Game().Height() - 1; layer >= 0; --layer)
 		{
 			for (int tower = 0; tower < 3; ++tower)
 			{
