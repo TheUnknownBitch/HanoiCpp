@@ -18,55 +18,6 @@ void Hanoi_Solution(int nb_disc, int start, int pivot, int finish, std::vector<p
 	}
 }
 
-class Tower
-{
-public:
-	Tower(int MaxHeight): nb_disc(0), discs(MaxHeight, 0)
-	{}
-	bool is_empty() const
-	{
-		return this->nb_disc == 0;
-	}
-	bool is_full() const
-	{
-		return this->nb_disc == this->discs.size();
-	}
-	int Top() const
-	{
-		if ( this->is_empty() )
-			return 0;
-		else
-			return this->discs[this->nb_disc - 1];
-	}
-	int disc_height(int const height) const
-	{
-		if ( this->is_empty() or (height >= this->nb_disc))
-			return 0;
-		else
-			return this->discs[height];
-	}
-	bool can_add_disc(int const disc) const
-	{
-		if (this->is_empty())
-			return true;
-		else
-			return (this->Top() > disc);
-	}
-	void Add_disc(int const disc)
-	{
-		this->discs[this->nb_disc] = disc;
-		this->nb_disc += 1;
-	}
-	void Remove_disc()
-	{
-		this->nb_disc -= 1;
-		this->discs[this->nb_disc] = 0;
-	}
-private:
-	int nb_disc;
-	vector<int> discs;
-}; //class tower
-
 
 class Hanoi
 {
